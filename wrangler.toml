@@ -1,0 +1,9 @@
+name = "alochat-api"
+main = "index.js"
+compatibility_date = "2026-10-30"
+
+[vars]
+SITE_URL = "https://YOUR-USERNAME.github.io/YOUR-REPOSITORY/"
+# After publishing, replace * with your exact GitHub Pages origin, e.g.
+# ALLOWED_ORIGINS = "https://YOUR-USERNAME.github.io"
+ALLOWED_ORIGINS = "*"
