@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="sw">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080d1c">
+<title>ALOCHAT Personal AI</title>
+<style>
+:root{--bg:#080d1c;--panel:#111a2e;--panel2:#17233b;--line:#263653;--text:#edf3ff;--muted:#9aabc7;--blue:#5aa8ff;--cyan:#54e1d2;--user:#173d68;--bot:#17243a}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% -10%,#16345c 0,transparent 35%),var(--bg);color:var(--text);font:15px system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+.app{max-width:850px;margin:auto;min-height:100vh;display:flex;flex-direction:column;padding:14px}
+header{display:flex;align-items:center;gap:12px;padding:10px 4px 16px;border-bottom:1px solid var(--line)}
+.logo{width:46px;height:46px;border-radius:15px;background:linear-gradient(135deg,#2586ff,#40e0ce);display:grid;place-items:center;color:#061326;font-weight:900;font-size:21px;box-shadow:0 8px 25px #1685ff44}
+h1{font-size:19px;margin:0} .sub{font-size:12px;color:var(--muted);margin-top:3px}.status{margin-left:auto;color:var(--cyan);font-size:11px;border:1px solid #276b6a;padding:6px 9px;border-radius:20px;white-space:nowrap}
+.tabs{display:flex;gap:8px;overflow:auto;padding:13px 0}.tab{border:1px solid var(--line);background:var(--panel);color:var(--muted);padding:9px 13px;border-radius:12px;white-space:nowrap}.tab.active{background:#173b65;color:white;border-color:#347fc5}
+main{flex:1;display:flex;flex-direction:column;min-height:50vh}.welcome{background:linear-gradient(135deg,#142b4b,#12243a);border:1px solid #29486d;border-radius:18px;padding:17px;margin:8px 0 14px}.welcome h2{margin:0 0 6px;font-size:18px}.welcome p{margin:0;color:#b8c9e3;line-height:1.5;font-size:13px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}.chip{background:#1a2c48;color:#cde3ff;border:1px solid #345172;border-radius:20px;padding:8px 11px;font-size:12px}
+#chat{display:flex;flex-direction:column;gap:12px;padding:4px 0 15px}.msg{max-width:88%;padding:12px 14px;border-radius:16px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}.bot{align-self:flex-start;background:var(--bot);border:1px solid #293a56;border-bottom-left-radius:5px}.user{align-self:flex-end;background:var(--user);border:1px solid #2e6297;border-bottom-right-radius:5px}.time{font-size:10px;color:#91a6c4;margin-top:5px}
+.composer{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg) 18%);padding:12px 0 max(10px,env(safe-area-inset-bottom));display:flex;gap:8px}
+textarea,input{font:inherit;color:var(--text);background:#101a2d;border:1px solid #2b3e5c;border-radius:14px;padding:12px;outline:none}textarea:focus,input:focus{border-color:var(--blue)}#prompt{flex:1;resize:none;min-height:48px;max-height:130px}
+button{font:inherit;cursor:pointer}.send{width:50px;border:0;border-radius:14px;background:linear-gradient(135deg,#2789ff,#39cbbb);color:#061326;font-size:20px;font-weight:900}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:15px;margin:8px 0}.panel h3{margin:0 0 10px}.muted{color:var(--muted);font-size:13px;line-height:1.5}.row{display:flex;gap:8px;flex-wrap:wrap}.row input{flex:1;min-width:160px}.action{background:#1b3557;border:1px solid #355477;color:#e5f1ff;padding:10px 13px;border-radius:11px}.danger{background:#492532;border-color:#754050}.item{padding:10px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px}.item:last-child{border:0}.item small{color:var(--muted)}.hidden{display:none!important}footer{text-align:center;color:#6f83a4;font-size:11px;padding:8px}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="logo">A</div><div><h1>ALOCHAT PERSONAL AI</h1><div class="sub">Msaidizi wako binafsi • Offline mode</div></div><div class="status">● OFFLINE READY</div></header>
+<nav class="tabs">
+<button class="tab active" data-page="chatPage">Chat</button>
+<button class="tab" data-page="notesPage">Notes</button>
+<button class="tab" data-page="tasksPage">Tasks</button>
+<button class="tab" data-page="memoryPage">Memory</button>
+</nav>
+<main>
+<section id="chatPage">
+<div class="welcome"><h2>Karibu ALOCHAT 👋</h2><p>Mimi ni msaidizi wa ndani ya simu. Naweza kufanya mazungumzo ya msingi, hesabu, kuhifadhi notes na tasks bila internet au API key.</p>
+<div class="chips"><button class="chip" data-say="Habari ALOCHAT">Habari</button><button class="chip" data-say="Nisaidie kufanya hesabu 25000 + 15000">Hesabu</button><button class="chip" data-say="Nipe mawazo ya content za gaming">Mawazo ya gaming</button><button class="chip" data-say="Saa na tarehe ni ngapi?">Tarehe na saa</button></div></div>
+<div id="chat" aria-live="polite"></div>
+<div class="composer"><textarea id="prompt" rows="1" placeholder="Andika ujumbe wako hapa..."></textarea><button class="send" id="send" aria-label="Tuma">➤</button></div>
+</section>
+<section id="notesPage" class="hidden"><div class="panel"><h3>📝 Notes zako</h3><p class="muted">Maandishi yanahifadhiwa kwenye simu hii.</p><textarea id="noteText" style="width:100%;min-height:120px" placeholder="Andika note..."></textarea><div class="row" style="margin-top:9px"><button class="action" id="saveNote">Hifadhi note</button><button class="action danger" id="clearNotes">Futa notes zote</button></div></div><div class="panel"><h3>Notes zilizohifadhiwa</h3><div id="notesList"></div></div></section>
+<section id="tasksPage" class="hidden"><div class="panel"><h3>✅ Tasks</h3><div class="row"><input id="taskInput" placeholder="Andika kazi ya kufanya..."><button class="action" id="addTask">Ongeza</button></div><div id="tasksList" style="margin-top:12px"></div></div></section>
+<section id="memoryPage" class="hidden"><div class="panel"><h3>🧠 Kumbukumbu ya ALOCHAT</h3><p class="muted">Unaweza kuhifadhi taarifa unazotaka msaidizi akumbuke kwenye kifaa hiki.</p><input id="memoryInput" style="width:100%" placeholder="Mfano: Ninapenda games za open world"><div class="row" style="margin-top:9px"><button class="action" id="addMemory">Hifadhi kumbukumbu</button><button class="action danger" id="clearMemory">Futa kumbukumbu</button></div><div id="memoryList" style="margin-top:12px"></div></div></section>
+</main>
+<footer>ALOCHAT • Data hubaki kwenye browser ya kifaa hiki • Hakuna akaunti wala backend</footer>
+</div>
+<script>
+(()=>{
+const $=id=>document.getElementById(id);
+const get=(k,d=[])=>{try{return JSON.parse(localStorage.getItem('alochat_'+k))??d}catch{return d}};
+const put=(k,v)=>localStorage.setItem('alochat_'+k,JSON.stringify(v));
+let history=get('history',[]);
+function addMsg(text,who='bot'){const el=document.createElement('div');el.className='msg '+who;el.textContent=text;const t=document.createElement('div');t.className='time';t.textContent=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});el.appendChild(t);$('chat').appendChild(el);$('chat').scrollTop=$('chat').scrollHeight;}
+function restore(){history.forEach(m=>addMsg(m.text,m.who));if(!history.length)addMsg('Habari! Mimi ni ALOCHAT. Niulize swali au niambie nikusaidie nini.');}
+function reply(raw){
+ const s=raw.trim(),q=s.toLowerCase(),mem=get('memory',[]);
+ const notes=get('notes',[]),tasks=get('tasks',[]);
+ if(/^(habari|mambo|vipi|hello|hi|hey)\b/.test(q))return 'Habari! Nipo tayari kukusaidia. Unaendeleaje leo?';
+ if(/jina lako|wewe ni nani|who are you/.test(q))return 'Mimi ni ALOCHAT PERSONAL AI, msaidizi wa ndani ya kifaa uliotengenezwa kwa ajili yako. Nafanya kazi offline bila API key.';
+ if(/saa|tarehe|date|time/.test(q))return 'Sasa ni '+new Date().toLocaleString('sw-TZ',{dateStyle:'full',timeStyle:'short'})+'.';
+ if(/kumbukumbu|unakumbuka|memory/.test(q))return mem.length?'Kumbukumbu nilizohifadhi:\n• '+mem.join('\n• '):'Bado huna kumbukumbu. Fungua sehemu ya Memory kuhifadhi taarifa.';
+ if(/notes|maandishi yangu/.test(q))return 'Una notes '+notes.length+'. Fungua sehemu ya Notes kuziona au kuongeza nyingine.';
+ if(/task|kazi zangu/.test(q))return 'Una tasks '+tasks.length+'. Fungua sehemu ya Tasks kuzisimamia.';
+ if(/msaada|help|unaweza kufanya nini/.test(q))return 'Naweza:\n• Kujibu salamu na maswali ya kawaida ya msingi\n• Kufanya hesabu, mfano 15000 + 25000\n• Kutoa mawazo ya content na gaming\n• Kuonyesha tarehe na saa\n• Kuhifadhi notes, tasks na kumbukumbu\n\nKumbuka: Hii ni assistant ya offline yenye majibu ya kanuni, si modeli kubwa ya AI.';
+ const math=s.match(/(?:hesabu|calculate|ni ngapi|jibu)\s*[:：]?\s*([0-9+\-*/().%\s]+)/i)||s.match(/^\s*([0-9][0-9+\-*/().%\s]*)\s*$/);
+ if(math){try{const expr=math[1].trim();if(!/^[0-9+\-*/().%\s]+$/.test(expr))throw 0;const result=Function('"use strict";return ('+expr+')')();if(!Number.isFinite(result))throw 0;return 'Jibu ni: '+result;}catch{return 'Sijaweza kutambua hesabu hiyo. Mfano: 25000 + 15000';}}
+ if(/content|video|tiktok|gaming|mchezo|game/.test(q))return 'Mawazo ya content za gaming:\n1. Jaribu challenge ngumu kwenye Free Fire.\n2. Linganisha game mbili za open-world.\n3. Tengeneza video ya tips 3 za kuboresha gameplay.\n4. Rekodi reaction yako unapopoteza au kushinda.\n5. Tengeneza story fupi ya gamer.\n\nNiambie game unayotaka ili nitoe mawazo yanayoendana nayo.';
+ if(/asante|thanks/.test(q))return 'Karibu sana! Nipo hapa kukusaidia.';
+ if(/hali ya hewa|weather/.test(q))return 'Taarifa za hali ya hewa zinahitaji internet. Kwa sasa niko offline.';
+ if(/internet|mtandaoni|habari za leo|latest|sasa hivi/.test(q))return 'Ili kupata taarifa za sasa au kutafuta mtandaoni, nahitaji internet. Kwa sasa ninafanya kazi offline.';
+ if(/nakupenda|love you/.test(q))return 'Asante! 😊 Nipo hapa kukusaidia kwa kadri niwezavyo.';
+ return 'Nimepokea ujumbe wako: "'+s+'".\n\nKwa sasa nina uwezo wa offline wa msingi, hivyo siwezi kuelewa kila swali kama AI kubwa ya mtandaoni. Jaribu kuandika "msaada" kuona ninachoweza kufanya, au niulize hesabu.';
+}
+function send(text){const s=(text??$('prompt').value).trim();if(!s)return;addMsg(s,'user');history.push({text:s,who:'user'});const r=reply(s);addMsg(r,'bot');history.push({text:r,who:'bot'});put('history',history.slice(-80));$('prompt').value='';$('prompt').style.height='auto';}
+$('send').onclick=()=>send();$('prompt').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}});$('prompt').addEventListener('input',e=>{e.target.style.height='auto';e.target.style.height=Math.min(e.target.scrollHeight,130)+'px';});
+document.querySelectorAll('[data-say]').forEach(b=>b.onclick=()=>send(b.dataset.say));
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===b));['chatPage','notesPage','tasksPage','memoryPage'].forEach(id=>$(id).classList.toggle('hidden',id!==b.dataset.page));renderAll();});
+function renderAll(){
+ const notes=get('notes',[]);$('notesList').innerHTML='';notes.forEach((n,i)=>{const d=document.createElement('div');d.className='item';const span=document.createElement('span');span.textContent=n;const del=document.createElement('button');del.className='action danger';del.textContent='Futa';del.onclick=()=>{notes.splice(i,1);put('notes',notes);renderAll()};d.append(span,del);$('notesList').append(d)});if(!notes.length)$('notesList').textContent='Bado hakuna notes.';
+ const tasks=get('tasks',[]);$('tasksList').innerHTML='';tasks.forEach((t,i)=>{const d=document.createElement('div');d.className='item';const label=document.createElement('label');const cb=document.createElement('input');cb.type='checkbox';cb.checked=t.done;cb.onchange=()=>{tasks[i].done=cb.checked;put('tasks',tasks);renderAll()};label.append(cb,document.createTextNode(' '+t.text));if(t.done)label.style.textDecoration='line-through';const del=document.createElement('button');del.className='action danger';del.textContent='×';del.onclick=()=>{tasks.splice(i,1);put('tasks',tasks);renderAll()};d.append(label,del);$('tasksList').append(d)});if(!tasks.length)$('tasksList').textContent='Bado hakuna tasks.';
+ const memories=get('memory',[]);$('memoryList').innerHTML='';memories.forEach((m,i)=>{const d=document.createElement('div');d.className='item';const sp=document.createElement('span');sp.textContent=m;const del=document.createElement('button');del.className='action danger';del.textContent='Futa';del.onclick=()=>{memories.splice(i,1);put('memory',memories);renderAll()};d.append(sp,del);$('memoryList').append(d)});if(!memories.length)$('memoryList').textContent='Bado hakuna kumbukumbu.';
+}
+$('saveNote').onclick=()=>{const v=$('noteText').value.trim();if(v){const a=get('notes',[]);a.unshift(v);put('notes',a);$('noteText').value='';renderAll();alert('Note imehifadhiwa kwenye simu.')}};
+$('clearNotes').onclick=()=>{if(confirm('Una uhakika unataka kufuta notes zote?')){put('notes',[]);renderAll()}};
+$('addTask').onclick=()=>{const v=$('taskInput').value.trim();if(v){const a=get('tasks',[]);a.push({text:v,done:false});put('tasks',a);$('taskInput').value='';renderAll()}};
+$('taskInput').addEventListener('keydown',e=>{if(e.key==='Enter')$('addTask').click()});
+$('addMemory').onclick=()=>{const v=$('memoryInput').value.trim();if(v){const a=get('memory',[]);a.push(v);put('memory',a);$('memoryInput').value='';renderAll();alert('Kumbukumbu imehifadhiwa.')}};
+$('clearMemory').onclick=()=>{if(confirm('Futa kumbukumbu zote?')){put('memory',[]);renderAll()}};
+restore();renderAll();
+})();
+</script>
+</body></html>
